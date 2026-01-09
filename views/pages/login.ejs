@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Favour Furniture</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #f8f5f0; 
+            min-height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            padding: 20px;
+        }
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 450px;
+        }
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .login-header h1 {
+            color: #8B4513;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .login-header p {
+            color: #666;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #8B4513;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #8B4513;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #A0522D;
+        }
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #c33;
+        }
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #eee;
+        }
+        .register-link a {
+            color: #8B4513;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>Welcome Back</h1>
+            <p>Login to your Favour Furniture account</p>
+        </div>
+
+        <% if (typeof error !== 'undefined' && error) { %>
+            <div class="error-message">
+                <%= error %>
+            </div>
+        <% } %>
+
+        <form action="/auth/login" method="POST" autocomplete="on">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required 
+                       placeholder="admin@favourfurniture.com" autocomplete="email"
+                       value="<%= typeof email !== 'undefined' ? email : '' %>">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required 
+                       placeholder="Enter your password" minlength="6" autocomplete="current-password">
+            </div>
+            
+            <button type="submit">Login</button>
+        </form>
+
+        <div class="register-link">
+            <p>Don't have an account? <a href="/auth/register">Register here</a></p>
+        </div>
+    </div>
+</body>
+</html>

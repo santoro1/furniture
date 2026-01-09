@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= typeof title !== 'undefined' ? title : 'Manage Orders' %></title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; }
+        
+        .admin-container { display: flex; min-height: 100vh; }
+        .admin-sidebar { width: 250px; background: #2c3e50; color: white; padding: 20px 0; }
+        .admin-sidebar h3 { padding: 0 20px 20px; border-bottom: 1px solid #34495e; color: #D2691E; }
+        .admin-sidebar ul { list-style: none; }
+        .admin-sidebar a { display: block; padding: 15px 20px; color: white; text-decoration: none; transition: background 0.3s; }
+        .admin-sidebar a:hover, .admin-sidebar a.active { background: #8B4513; }
+        
+        .admin-main { flex: 1; }
+        .admin-header { background: white; padding: 20px 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
+        .admin-content { padding: 30px; }
+        
+        .orders-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 20px; border-radius: 10px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.3s; }
+        .stat-card:hover { transform: translateY(-3px); }
+        .stat-card.active { border: 2px solid #8B4513; background: #fef6f0; }
+        .stat-number { font-size: 36px; font-weight: bold; color: #8B4513; }
+        .stat-label { color: #666; font-size: 14px; margin-top: 5px; }
+        
+        .orders-filters { background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+        .filter-group { display: flex; gap: 15px; align-items: center; flex-wrap: wrap; }
+        select, input { padding: 10px; border: 2px solid #ddd; border-radius: 5px; font-size: 14px; }
+        select:focus, input:focus { outline: none; border-color: #8B4513; }
+        
+        .orders-table { width: 100%; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #f8f9fa; font-weight: 600; color: #333; }
+        
+        .status-badge { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; }
+        .status-pending { background: #FFF3CD; color: #856404; }
+        .status-processing { background: #D1ECF1; color: #0C5460; }
+        .status-shipped { background: #CCE5FF; color: #004085; }
+        .status-delivered { background: #D4EDDA; color: #155724; }
+        .status-cancelled { background: #F8D7DA; color: #721C24; }
+        
+        .payment-badge { padding: 3px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; }
+        .payment-pending { background: #FFF3CD; color: #856404; }
+        .payment-paid { background: #D4EDDA; color: #155724; }
+        .payment-failed { background: #F8D7DA; color: #721C24; }
+        
+        .btn-action { padding: 5px 10px; margin: 0 3px; border: none; border-radius: 3px; cursor: pointer; font-size: 12px; font-weight: 500; }
+        .btn-view { background: #3498db; color: white; }
+        .btn-edit { background: #2ecc71; color: white; }
+        .btn-delete { background: #e74c3c; color: white; }
+        
+        .pagination { display: flex; justify-content: center; margin-top: 30px; gap: 5px; }
+        .page-link { padding: 8px 15px; background: white; border: 1px solid #ddd; border-radius: 5px; text-decoration: none; color: #333; }
+        .page-link.active { background: #8B4513; color: white; border-color: #8B4513; }
+        .page-link:hover:not(.active) { background: #f0f0f0; }
+        
+        .no-orders { text-align: center; padding: 50px; color: #666; }
+        
+        /* Modal Styles */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
+        .modal-content { background: white; width: 500px; max-width: 90%; margin: 50px auto; padding: 30px; border-radius: 10px; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: #666; }
+        
+        .alert { padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .alert-success { background: #d4edda; color: #155724; }
+        .alert-error { background: #f8d7da; color: #721c24; }
+        
+        /* Customer Details */
+        .customer-details {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .customer-details small {
+            display: block;
+            margin-top: 3px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            th, td { padding: 10px; font-size: 14px; }
+            .stat-number { font-size: 28px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <h3>Admin Panel</h3>
+            <nav>
+                <ul>
+                    <li><a href="/admin/dashboard">📊 Dashboard</a></li>
+                    <li><a href="/admin/products">🛋️ Products</a></li>
+                    <li><a href="/admin/orders" class="active">📦 Orders</a></li>
+                    <li><a href="/">🏠 View Site</a></li>
+                    <li><a href="/auth/logout">🚪 Logout</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1><%= title %></h1>
+                <div>Welcome, <%= user.name %> | <span style="color: #D2691E;"><%= user.role %></span></div>
+            </header>
+
+            <div class="admin-content">
+                <!-- Flash Messages -->
+                <% if (typeof success !== 'undefined' && success.length > 0) { %>
+                    <div class="alert alert-success">
+                        <%= success[0] %>
+                    </div>
+                <% } %>
+                
+                <% if (typeof error !== 'undefined' && error.length > 0) { %>
+                    <div class="alert alert-error">
+                        <%= error[0] %>
+                    </div>
+                <% } %>
+
+                <!-- Order Stats -->
+                <div class="orders-stats">
+                    <div class="stat-card <%= currentFilter === 'all' ? 'active' : '' %>" onclick="window.location.href='/admin/orders'">
+                        <div class="stat-number"><%= stats.total %></div>
+                        <div class="stat-label">Total Orders</div>
+                    </div>
+                    <div class="stat-card <%= currentFilter === 'pending' ? 'active' : '' %>" onclick="window.location.href='/admin/orders?status=pending'">
+                        <div class="stat-number"><%= stats.pending %></div>
+                        <div class="stat-label">Pending</div>
+                    </div>
+                    <div class="stat-card <%= currentFilter === 'processing' ? 'active' : '' %>" onclick="window.location.href='/admin/orders?status=processing'">
+                        <div class="stat-number"><%= stats.processing %></div>
+                        <div class="stat-label">Processing</div>
+                    </div>
+                    <div class="stat-card <%= currentFilter === 'shipped' ? 'active' : '' %>" onclick="window.location.href='/admin/orders?status=shipped'">
+                        <div class="stat-number"><%= stats.shipped %></div>
+                        <div class="stat-label">Shipped</div>
+                    </div>
+                    <div class="stat-card <%= currentFilter === 'delivered' ? 'active' : '' %>" onclick="window.location.href='/admin/orders?status=delivered'">
+                        <div class="stat-number"><%= stats.delivered %></div>
+                        <div class="stat-label">Delivered</div>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="orders-filters">
+                    <form method="GET" action="/admin/orders" class="filter-group">
+                        <select name="status" onchange="this.form.submit()">
+                            <option value="all" <%= currentFilter === 'all' ? 'selected' : '' %>>All Status</option>
+                            <option value="pending" <%= currentFilter === 'pending' ? 'selected' : '' %>>Pending</option>
+                            <option value="processing" <%= currentFilter === 'processing' ? 'selected' : '' %>>Processing</option>
+                            <option value="shipped" <%= currentFilter === 'shipped' ? 'selected' : '' %>>Shipped</option>
+                            <option value="delivered" <%= currentFilter === 'delivered' ? 'selected' : '' %>>Delivered</option>
+                            <option value="cancelled" <%= currentFilter === 'cancelled' ? 'selected' : '' %>>Cancelled</option>
+                        </select>
+                        
+                        <select name="limit" onchange="this.form.submit()">
+                            <option value="10" <%= limit === 10 ? 'selected' : '' %>>10 per page</option>
+                            <option value="25" <%= limit === 25 ? 'selected' : '' %>>25 per page</option>
+                            <option value="50" <%= limit === 50 ? 'selected' : '' %>>50 per page</option>
+                        </select>
+                        
+                        <input type="text" name="search" placeholder="Search orders..." 
+                               value="<%= typeof search !== 'undefined' ? search : '' %>">
+                    </form>
+                </div>
+
+                <!-- Orders Table -->
+                <div class="orders-table">
+                    <% if (typeof orders !== 'undefined' && orders.length > 0) { %>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Order #</th>
+                                    <th>Customer Details</th>
+                                    <th>Date & Time</th>
+                                    <th>Items</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Payment</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% orders.forEach(order => { %>
+                                    <tr>
+                                        <td>
+                                            <strong><%= order.orderNumber %></strong><br>
+                                            <small style="color: #999;"><%= order._id.toString().slice(-6) %></small>
+                                        </td>
+                                        <td>
+                                            <strong><%= order.shippingAddress.fullName %></strong>
+                                            <div class="customer-details">
+                                                <small>📱 <%= order.shippingAddress.phone %></small>
+                                                <small>📧 <%= order.user && order.user.email ? order.user.email : 'N/A' %></small>
+                                                <small>📍 <%= order.shippingAddress.city %>, <%= order.shippingAddress.state %></small>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <%= new Date(order.createdAt).toLocaleDateString() %><br>
+                                            <small style="color: #999;"><%= new Date(order.createdAt).toLocaleTimeString() %></small>
+                                        </td>
+                                        <td><%= order.items.length %> item(s)<br>
+                                            <small style="color: #666;">
+                                                <% order.items.forEach(item => { %>
+                                                    <%= item.name %> (x<%= item.quantity %>)<br>
+                                                <% }) %>
+                                            </small>
+                                        </td>
+                                        <td>₦<%= order.totalAmount.toLocaleString() %></td>
+                                        <td>
+                                            <span class="status-badge status-<%= order.orderStatus %>">
+                                                <%= order.orderStatus %>
+                                            </span>
+                                            <% if (order.trackingNumber) { %>
+                                                <br><small style="color: #666;">Tracking: <%= order.trackingNumber %></small>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <span class="payment-badge payment-<%= order.paymentStatus %>">
+                                                <%= order.paymentStatus %>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <button class="btn-action btn-view" onclick="viewOrder('<%= order._id %>')">View</button>
+                                            <button class="btn-action btn-edit" onclick="editOrder('<%= order._id %>')">Update</button>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    <% } else { %>
+                        <div class="no-orders">
+                            <h3>No orders found</h3>
+                            <p>There are no orders matching your criteria.</p>
+                        </div>
+                    <% } %>
+                </div>
+
+                <!-- Pagination -->
+                <% if (totalPages > 1) { %>
+                    <div class="pagination">
+                        <% for (let i = 1; i <= totalPages; i++) { %>
+                            <a href="/admin/orders?status=<%= currentFilter %>&page=<%= i %>&limit=<%= limit %>" 
+                               class="page-link <%= currentPage === i ? 'active' : '' %>">
+                                <%= i %>
+                            </a>
+                        <% } %>
+                    </div>
+                <% } %>
+            </div>
+        </main>
+    </div>
+
+    <!-- Update Order Modal -->
+    <div id="updateModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Update Order Status</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="updateForm" onsubmit="updateOrderStatus(event)">
+                <input type="hidden" id="orderId" name="orderId">
+                
+                <div style="margin-bottom: 15px;">
+                    <label>Order Status:</label>
+                    <select id="orderStatus" name="status" required style="width: 100%; padding: 10px; margin-top: 5px;">
+                        <option value="pending">Pending</option>
+                        <option value="processing">Processing</option>
+                        <option value="shipped">Shipped</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label>Tracking Number:</label>
+                    <input type="text" id="trackingNumber" name="trackingNumber" 
+                           placeholder="Enter tracking number" 
+                           style="width: 100%; padding: 10px; margin-top: 5px;">
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label>Payment Status:</label>
+                    <select id="paymentStatus" name="paymentStatus" style="width: 100%; padding: 10px; margin-top: 5px;">
+                        <option value="pending">Pending</option>
+                        <option value="paid">Paid</option>
+                        <option value="failed">Failed</option>
+                        <option value="refunded">Refunded</option>
+                    </select>
+                </div>
+                
+                <button type="submit" style="width: 100%; padding: 12px; background: #8B4513; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                    Update Order
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function viewOrder(orderId) {
+            window.location.href = `/admin/orders/${orderId}`;
+        }
+
+        let currentOrderId = null;
+
+        function editOrder(orderId) {
+            currentOrderId = orderId;
+            
+            // Fetch order details
+            fetch(`/admin/orders/${orderId}`)
+                .then(response => response.json())
+                .then(order => {
+                    if (order) {
+                        document.getElementById('orderId').value = orderId;
+                        document.getElementById('orderStatus').value = order.orderStatus;
+                        document.getElementById('trackingNumber').value = order.trackingNumber || '';
+                        document.getElementById('paymentStatus').value = order.paymentStatus;
+                        
+                        // Show modal
+                        document.getElementById('updateModal').style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching order:', error);
+                    alert('Error loading order details');
+                });
+        }
+
+        function closeModal() {
+            document.getElementById('updateModal').style.display = 'none';
+            currentOrderId = null;
+        }
+
+        function updateOrderStatus(e) {
+            e.preventDefault();
+            
+            const formData = {
+                status: document.getElementById('orderStatus').value,
+                trackingNumber: document.getElementById('trackingNumber').value,
+                paymentStatus: document.getElementById('paymentStatus').value
+            };
+
+            fetch(`/admin/orders/${currentOrderId}/status`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    closeModal();
+                    window.location.reload();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error updating order');
+            });
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('updateModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Auto-refresh every 30 seconds
+        setInterval(() => {
+            const currentUrl = window.location.href;
+            fetch(currentUrl)
+                .then(response => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const newTable = doc.querySelector('.orders-table');
+                    const oldTable = document.querySelector('.orders-table');
+                    if (newTable && oldTable) {
+                        oldTable.innerHTML = newTable.innerHTML;
+                    }
+                })
+                .catch(error => console.log('Auto-refresh failed:', error));
+        }, 30000);
+
+        // Initialize page
+        console.log('Orders page loaded');
+        console.log('Total orders:', <%= stats.total %>);
+        console.log('Current filter:', '<%= currentFilter %>');
+    </script>
+</body>
+</html>

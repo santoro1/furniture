@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Favour Furniture</title>
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            line-height: 1.6; 
+            color: #333; 
+            background: #f8f5f0; 
+        }
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 0 20px; 
+        }
+        
+        /* Header */
+        .site-header { 
+            background: white; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+            padding: 15px 0; 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+        }
+        .header-content { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            flex-wrap: wrap; 
+        }
+        .logo a { 
+            color: #8B4513; 
+            text-decoration: none; 
+            font-size: 24px; 
+            font-weight: bold; 
+        }
+        .logo p { 
+            color: #D2691E; 
+            font-size: 12px; 
+            margin-top: 2px; 
+        }
+        .main-nav ul { 
+            list-style: none; 
+            display: flex; 
+            gap: 30px; 
+            flex-wrap: wrap; 
+        }
+        .main-nav a { 
+            text-decoration: none; 
+            color: #333; 
+            font-weight: 500; 
+            padding: 5px 10px; 
+            border-radius: 4px; 
+            transition: all 0.3s ease; 
+        }
+        .main-nav a:hover, .main-nav a.active { 
+            background: #8B4513; 
+            color: white; 
+        }
+        
+        /* Hero Section */
+        .hero { 
+            background: linear-gradient(rgba(44, 62, 80, 0.465), rgba(44, 62, 80, 0.9)), 
+                        url('/images/about-hero.jpg') center/cover; 
+            color: white; 
+            padding: 100px 20px; 
+            text-align: center; 
+        }
+        .hero h2 { 
+            font-size: 3.5rem; 
+            margin-bottom: 20px; 
+            font-weight: 300; 
+        }
+        .hero p { 
+            font-size: 1.2rem; 
+            max-width: 600px; 
+            margin: 0 auto 30px; 
+            opacity: 0.9; 
+        }
+        .btn-primary { 
+            display: inline-block; 
+            background: #8B4513; 
+            color: white; 
+            padding: 15px 35px; 
+            border-radius: 5px; 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 18px; 
+            transition: all 0.3s ease; 
+            border: none; 
+            cursor: pointer; 
+        }
+        .btn-primary:hover { 
+            background: #A0522D; 
+            transform: translateY(-3px); 
+            box-shadow: 0 5px 20px rgba(139, 69, 19, 0.3); 
+        }
+        
+        /* About Content */
+        .about-section { 
+            padding: 80px 20px; 
+        }
+        .section-title { 
+            text-align: center; 
+            font-size: 2.5rem; 
+            color: #8B4513; 
+            margin-bottom: 50px; 
+            font-weight: 300; 
+        }
+        .about-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 40px; 
+            margin-bottom: 60px; 
+        }
+        .about-card { 
+            background: white; 
+            padding: 40px; 
+            border-radius: 10px; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1); 
+            text-align: center; 
+            transition: transform 0.3s ease; 
+        }
+        .about-card:hover { 
+            transform: translateY(-10px); 
+        }
+        .about-icon { 
+            font-size: 48px; 
+            color: #8B4513; 
+            margin-bottom: 20px; 
+        }
+        .about-card h3 { 
+            color: #2c3e50; 
+            margin-bottom: 15px; 
+            font-size: 1.5rem; 
+        }
+        .about-card p { 
+            color: #666; 
+            line-height: 1.8; 
+        }
+        
+        /* Story Section */
+        .story-section { 
+            background: white; 
+            padding: 80px 20px; 
+            border-radius: 10px; 
+            margin-bottom: 60px; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1); 
+        }
+        .story-content { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            text-align: center; 
+        }
+        .story-content h3 { 
+            color: #8B4513; 
+            margin-bottom: 30px; 
+            font-size: 2rem; 
+        }
+        .story-content p { 
+            color: #555; 
+            line-height: 1.8; 
+            margin-bottom: 20px; 
+            font-size: 1.1rem; 
+        }
+        
+        /* Values Section */
+        .values-section { 
+            padding: 80px 20px; 
+        }
+        .values-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 30px; 
+        }
+        .value-item { 
+            text-align: center; 
+            padding: 30px; 
+            background: white; 
+            border-radius: 10px; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
+        }
+        .value-number { 
+            font-size: 48px; 
+            font-weight: bold; 
+            color: #8B4513; 
+            margin-bottom: 15px; 
+        }
+        .value-title { 
+            color: #2c3e50; 
+            margin-bottom: 15px; 
+            font-size: 1.3rem; 
+        }
+        
+        /* Footer */
+        .site-footer { 
+            background: #2c3e50; 
+            color: white; 
+            padding: 60px 20px 30px; 
+            margin-top: 60px; 
+        }
+        .footer-content { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 40px; 
+            margin-bottom: 40px; 
+        }
+        .footer-section h3 { 
+            color: #D2691E; 
+            margin-bottom: 20px; 
+            font-size: 1.5rem; 
+        }
+        .footer-section h4 { 
+            color: #D2691E; 
+            margin-bottom: 15px; 
+        }
+        .footer-section ul { 
+            list-style: none; 
+        }
+        .footer-section ul li { 
+            margin-bottom: 10px; 
+        }
+        .footer-section a { 
+            color: #ddd; 
+            text-decoration: none; 
+            transition: color 0.3s; 
+        }
+        .footer-section a:hover { 
+            color: #8B4513; 
+        }
+        .footer-bottom { 
+            text-align: center; 
+            padding-top: 30px; 
+            border-top: 1px solid #34495e; 
+            color: #95a5a6; 
+            font-size: 14px; 
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h2 { font-size: 2.5rem; }
+            .section-title { font-size: 2rem; }
+            .header-content { flex-direction: column; gap: 15px; }
+            .main-nav ul { gap: 15px; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1><a href="/">Favour Furniture</a></h1>
+                    <p>Premium Quality</p>
+                </div>
+                
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/products">Products</a></li>
+                        <li><a href="/about" class="active">About</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                        <% if (typeof user !== 'undefined' && user) { %>
+                            <% if (user.role === 'admin') { %>
+                                <li><a href="/admin/dashboard">Dashboard</a></li>
+                            <% } %>
+                            <li><a href="/auth/logout">Logout (<%= user.name %>)</a></li>
+                        <% } else { %>
+                            <li><a href="/auth/login">Login</a></li>
+                            <li><a href="/auth/register">Register</a></li>
+                        <% } %>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h2>About Favour Furniture</h2>
+            <p>For over 15 years, we've been crafting premium furniture that combines timeless design with exceptional comfort</p>
+            <a href="/products" class="btn-primary">Explore Our Collection</a>
+        </div>
+    </section>
+
+    <!-- About Content -->
+    <section class="about-section">
+        <div class="container">
+            <h2 class="section-title">Our Story & Vision</h2>
+            
+            <div class="about-grid">
+                <div class="about-card">
+                    <div class="about-icon">🏭</div>
+                    <h3>Our Heritage</h3>
+                    <p>Founded in 2009 in Port Harcourt, Favour Furniture started as a small workshop with a passion for quality woodwork. Today, we're a leading furniture manufacturer serving customers across Nigeria.</p>
+                </div>
+                
+                <div class="about-card">
+                    <div class="about-icon">🎯</div>
+                    <h3>Our Mission</h3>
+                    <p>To create exceptional furniture that enhances living spaces with superior craftsmanship, sustainable materials, and designs that stand the test of time.</p>
+                </div>
+                
+                <div class="about-card">
+                    <div class="about-icon">⭐</div>
+                    <h3>Our Promise</h3>
+                    <p>Every piece we create is backed by our commitment to quality, durability, and customer satisfaction. We stand behind every product we make.</p>
+                </div>
+            </div>
+            
+            <div class="story-section">
+                <div class="story-content">
+                    <h3>Crafting Excellence Since 2009</h3>
+                    <p>What began as a modest furniture workshop in Port Harcourt has grown into Favour Furniture International Company Ltd – a name synonymous with quality, reliability, and exquisite design in the Nigerian furniture industry.</p>
+                    
+                    <p>Our journey started with a simple belief: that every Nigerian home deserves access to premium quality furniture that combines aesthetic appeal with lasting durability. Over the years, we've stayed true to our roots while embracing innovation, expanding our product range from traditional living room sets to modern office furniture, bedroom suites, and custom pieces.</p>
+                    
+                    <p>Located at No. 6b Choba St John Street, Port Harcourt, our manufacturing facility combines traditional woodworking techniques with modern technology. Each piece is crafted by skilled artisans who take pride in their work, ensuring that every joint, finish, and detail meets our exacting standards.</p>
+                    
+                    <p>Today, we serve customers across Nigeria, from individual homeowners to corporate clients, all sharing our appreciation for quality craftsmanship and timeless design.</p>
+                </div>
+            </div>
+            
+            <div class="values-section">
+                <h2 class="section-title">Why Choose Favour Furniture?</h2>
+                
+                <div class="values-grid">
+                    <div class="value-item">
+                        <div class="value-number">15+</div>
+                        <div class="value-title">Years of Excellence</div>
+                        <p>Over a decade and a half of furniture manufacturing expertise</p>
+                    </div>
+                    
+                    <div class="value-item">
+                        <div class="value-number">100%</div>
+                        <div class="value-title">Quality Guarantee</div>
+                        <p>Every piece crafted with premium materials and attention to detail</p>
+                    </div>
+                    
+                    <div class="value-item">
+                        <div class="value-number">5000+</div>
+                        <div class="value-title">Happy Customers</div>
+                        <p>Serving families and businesses across Nigeria with satisfaction</p>
+                    </div>
+                    
+                    <div class="value-item">
+                        <div class="value-number">24/7</div>
+                        <div class="value-title">Customer Support</div>
+                        <p>Always available to answer questions and provide assistance</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Favour Furniture Int'l</h3>
+                    <p>Premium furniture manufacturing with global standards. Crafting excellence since 2009.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/products">Products</a></li>
+                        <li><a href="/about">About Us</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p>No. 6b Choba St John Street, Port Harcourt</p>
+                    <p>📞 07073335959</p>
+                    <p>📞 08012345678</p>
+                    <p>✉️ momohbaba95@gmail.com</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Business Hours</h4>
+                    <p>Monday - Friday: 8:00 AM - 6:00 PM</p>
+                    <p>Saturday: 9:00 AM - 4:00 PM</p>
+                    <p>Sunday: By Appointment Only</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; <%= new Date().getFullYear() %> Favour Furniture Int'l Company Ltd. All rights reserved.</p>
+                <p style="margin-top: 10px; font-size: 13px;">Crafted with excellence for your comfort</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

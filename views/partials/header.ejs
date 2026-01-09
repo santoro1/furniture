@@ -1,0 +1,29 @@
+<header class="site-header">
+    <div class="container">
+        <div class="header-content">
+            <div class="logo">
+                <h1><a href="/">Favour Furniture</a></h1>
+                <p>Premium Quality</p>
+            </div>
+            
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="/" class="<%= typeof currentPage !== 'undefined' && currentPage === 'home' ? 'active' : '' %>">Home</a></li>
+                    <li><a href="/products" class="<%= typeof currentPage !== 'undefined' && currentPage === 'products' ? 'active' : '' %>">Products</a></li>
+                    <li><a href="/about" class="<%= typeof currentPage !== 'undefined' && currentPage === 'about' ? 'active' : '' %>">About</a></li>
+                    <li><a href="/contact" class="<%= typeof currentPage !== 'undefined' && currentPage === 'contact' ? 'active' : '' %>">Contact</a></li>
+                    
+                    <% if (typeof user !== 'undefined' && user) { %>
+                        <% if (user.role === 'admin') { %>
+                            <li><a href="/admin/dashboard">Dashboard</a></li>
+                        <% } %>
+                        <li><a href="/auth/logout">Logout (<%= user.name %>)</a></li>
+                    <% } else { %>
+                        <li><a href="/auth/login" class="<%= typeof currentPage !== 'undefined' && currentPage === 'login' ? 'active' : '' %>">Login</a></li>
+                        <li><a href="/auth/register" class="<%= typeof currentPage !== 'undefined' && currentPage === 'register' ? 'active' : '' %>">Register</a></li>
+                    <% } %>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</header>

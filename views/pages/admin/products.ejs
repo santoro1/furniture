@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Products - Favour Furniture</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8f5f0; color: #333; line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        /* Header Styles */
+        .site-header { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 15px 0; position: sticky; top: 0; z-index: 100; }
+        .header-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .logo a { color: #8B4513; text-decoration: none; font-size: 24px; font-weight: bold; }
+        .logo p { color: #666; font-size: 12px; margin-top: 2px; }
+        .main-nav ul { list-style: none; display: flex; gap: 25px; flex-wrap: wrap; }
+        .main-nav a { text-decoration: none; color: #333; font-weight: 500; padding: 5px 10px; border-radius: 4px; transition: all 0.3s ease; }
+        .main-nav a:hover, .main-nav a.active { background: #8B4513; color: white; }
+        
+        /* Main Content */
+        .products-page { padding: 40px 20px; min-height: 60vh; }
+        .page-title { text-align: center; font-size: 2.5rem; color: #8B4513; margin-bottom: 40px; font-weight: 300; }
+        
+        /* Products Grid */
+        .products-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 30px; 
+            margin-bottom: 40px;
+        }
+        .product-card { 
+            background: white; 
+            border-radius: 12px; 
+            overflow: hidden; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .product-image { 
+            height: 220px; 
+            background: #f8f5f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .product-image img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+        .product-info { padding: 20px; }
+        .product-type { 
+            color: #D2691E; 
+            font-size: 0.8rem; 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+        .product-name { 
+            font-size: 1.25rem; 
+            margin: 5px 0 10px; 
+            color: #333;
+            font-weight: 600;
+        }
+        .product-price { 
+            font-size: 1.5rem; 
+            font-weight: bold; 
+            color: #8B4513; 
+            margin-bottom: 15px; 
+        }
+        .btn-view { 
+            display: block; 
+            background: #8B4513; 
+            color: white; 
+            padding: 12px 20px; 
+            text-align: center; 
+            border-radius: 6px; 
+            text-decoration: none; 
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        .btn-view:hover { 
+            background: #A0522D; 
+        }
+        
+        /* No Products State */
+        .no-products { 
+            text-align: center; 
+            padding: 60px 20px; 
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .no-products h3 { 
+            color: #8B4513; 
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        .no-products p { 
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        /* Footer */
+        .site-footer { 
+            background: #2c3e50; 
+            color: white; 
+            padding: 40px 20px; 
+            text-align: center; 
+            margin-top: 60px; 
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content { flex-direction: column; gap: 15px; }
+            .main-nav ul { gap: 15px; justify-content: center; }
+            .page-title { font-size: 2rem; }
+            .products-grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1><a href="/">Favour Furniture</a></h1>
+                    <p>Premium Quality</p>
+                </div>
+                
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="/" class="<%= typeof currentPage !== 'undefined' && currentPage === 'home' ? 'active' : '' %>">Home</a></li>
+                        <li><a href="/products" class="<%= typeof currentPage !== 'undefined' && currentPage === 'products' ? 'active' : '' %>">Products</a></li>
+                        <li><a href="/about">About</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                        
+                        <!-- User Authentication Links -->
+                        <% if (typeof user !== 'undefined' && user) { %>
+                            <% if (user.role === 'admin') { %>
+                                <li><a href="/admin/dashboard">Dashboard</a></li>
+                            <% } %>
+                            <li><a href="/auth/logout">Logout (<%= typeof user.name !== 'undefined' ? user.name : user.email %>)</a></li>
+                        <% } else { %>
+                            <li><a href="/auth/login">Login</a></li>
+                            <li><a href="/auth/register">Register</a></li>
+                        <% } %>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="products-page">
+        <div class="container">
+            <h1 class="page-title">Our Furniture Collection</h1>
+            
+            <!-- Products Grid -->
+            <% if (typeof products !== 'undefined' && Array.isArray(products) && products.length > 0) { %>
+                <div class="products-grid">
+                    <% products.forEach(function(product, index) { %>
+                        <div class="product-card" data-product-id="<%= product._id || index %>">
+                            <div class="product-image">
+                                <% 
+                                const imageSrc = (product.image && product.image !== 'no-image.jpg' && product.image !== '') 
+                                    ? '/uploads/' + product.image 
+                                    : '/images/placeholder.jpg';
+                                const imageAlt = product.name || 'Product Image';
+                                %>
+                                <img src="<%= imageSrc %>" alt="<%= imageAlt %>" onerror="this.src='/images/placeholder.jpg'">
+                            </div>
+                            <div class="product-info">
+                                <p class="product-type">
+                                    <%= typeof product.type !== 'undefined' && product.type ? product.type : 'Furniture' %>
+                                </p>
+                                <h3 class="product-name">
+                                    <%= typeof product.name !== 'undefined' && product.name ? product.name : 'Unnamed Product' %>
+                                </h3>
+                                <p class="product-price">
+                                    ₦<%= typeof product.price !== 'undefined' && product.price ? product.price.toLocaleString() : '0' %>
+                                </p>
+                                <% if (product._id) { %>
+                                    <a href="/products/<%= product._id %>" class="btn-view">View Details</a>
+                                <% } else { %>
+                                    <span class="btn-view" style="background: #95a5a6; cursor: not-allowed;">Unavailable</span>
+                                <% } %>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            <% } else if (typeof products !== 'undefined' && Array.isArray(products) && products.length === 0) { %>
+                <!-- No Products Available -->
+                <div class="no-products">
+                    <h3>No Products Available</h3>
+                    <p>We're currently updating our furniture collection. Please check back soon!</p>
+                    <div style="margin-top: 20px;">
+                        <a href="/" class="btn-view" style="display: inline-block; width: auto; padding: 10px 25px;">Return Home</a>
+                    </div>
+                </div>
+            <% } else { %>
+                <!-- Products Data Not Loaded -->
+                <div class="no-products">
+                    <h3>Loading Products...</h3>
+                    <p>Please wait while we load our furniture collection.</p>
+                </div>
+            <% } %>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; <%= new Date().getFullYear() %> Favour Furniture Int'l Company Ltd. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

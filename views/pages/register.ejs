@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Favour Furniture</title>
+    <style>
+        /* Same styles as login - copy the entire <style> block from login.ejs above */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #f8f5f0; 
+            min-height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            padding: 20px;
+        }
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 450px;
+        }
+        .login-header { text-align: center; margin-bottom: 30px; }
+        .login-header h1 { color: #8B4513; font-size: 28px; margin-bottom: 10px; }
+        .login-header p { color: #666; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #333; }
+        input, textarea {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input:focus, textarea:focus { outline: none; border-color: #8B4513; }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #8B4513;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        button:hover { background: #A0522D; }
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #c33;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #eee;
+        }
+        .login-link a { color: #8B4513; font-weight: 600; text-decoration: none; }
+        .login-link a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>Create Account</h1>
+            <p>Register for Favour Furniture</p>
+        </div>
+
+        <% if (typeof error !== 'undefined' && error) { %>
+            <div class="error-message">
+                <%= error %>
+            </div>
+        <% } %>
+
+        <form action="/auth/register" method="POST">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required placeholder="Enter your full name">
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required placeholder="Enter your email">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Min 6 characters" minlength="6">
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">Phone Number (Optional)</label>
+                <input type="tel" id="phone" name="phone" placeholder="Enter your phone" pattern="[0-9]{11} required>
+            </div>
+            
+            <div class="form-group">
+                <label for="address">Delivery Address (Optional)</label>
+                <textarea id="address" name="address" rows="3" placeholder="Enter your delivery address"></textarea>
+            </div>
+            
+            <button type="submit">Register</button>
+        </form>
+
+        <div class="login-link">
+            <p>Already have an account? <a href="/auth/login">Login here</a></p>
+        </div>
+    </div>
+</body>
+</html>

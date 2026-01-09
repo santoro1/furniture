@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product - Favour Furniture</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; }
+        
+        .admin-container { display: flex; min-height: 100vh; }
+        .admin-sidebar { width: 250px; background: #2c3e50; color: white; padding: 20px 0; }
+        .admin-sidebar h3 { padding: 0 20px 20px; border-bottom: 1px solid #34495e; color: #D2691E; }
+        .admin-sidebar ul { list-style: none; }
+        .admin-sidebar a { display: block; padding: 15px 20px; color: white; text-decoration: none; transition: background 0.3s; }
+        .admin-sidebar a:hover, .admin-sidebar a.active { background: #8B4513; }
+        
+        .admin-main { flex: 1; }
+        .admin-header { background: white; padding: 20px 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
+        .admin-content { padding: 30px; }
+        
+        .admin-form { max-width: 800px; background: white; padding: 30px; border-radius: 10px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; }
+        input, select, textarea { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 5px; font-size: 16px; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #8B4513; }
+        button { padding: 12px 30px; background: #8B4513; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+        button:hover { background: #A0522D; }
+        .btn-secondary { background: #6c757d; margin-left: 10px; }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <h3>Admin Panel</h3>
+            <nav>
+                <ul>
+                    <li><a href="/admin/dashboard">📊 Dashboard</a></li>
+                    <li><a href="/admin/products">🛋️ Products</a></li>
+                    <li><a href="/admin/orders">📦 Orders</a></li>
+                    <li><a href="/auth/logout">🚪 Logout</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1>Add New Product</h1>
+            </header>
+
+            <div class="admin-content">
+                <form action="/admin/products" method="POST" enctype="multipart/form-data" class="admin-form">
+                    <div class="form-group">
+                        <label for="name">Product Name *</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="type">Product Type *</label>
+                        <select id="type" name="type" required>
+                            <option value="">Select Type</option>
+                            <option value="Chair">Chair</option>
+                            <option value="Table">Table</option>
+                            <option value="Bed">Bed</option>
+                            <option value="Cabinet">Cabinet</option>
+                            <option value="Sofa">Sofa</option>
+                            <option value="Shelf">Shelf</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="price">Price (₦) *</label>
+                        <input type="number" id="price" name="price" min="0" step="0.01" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="description">Description *</label>
+                        <textarea id="description" name="description" rows="5" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="image">Product Image *</label>
+                        <input type="file" id="image" name="image" accept="image/*" required>
+                    </div>
+                    
+                    <button type="submit">Add Product</button>
+                    <a href="/admin/products" class="btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

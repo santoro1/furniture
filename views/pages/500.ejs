@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Error - Favour Furniture</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #f8f5f0; 
+            color: #333; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+        .error-container { 
+            background: white; 
+            padding: 50px; 
+            border-radius: 15px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 90%;
+        }
+        .error-icon { 
+            font-size: 80px; 
+            color: #e74c3c; 
+            margin-bottom: 20px;
+        }
+        h1 { 
+            color: #2c3e50; 
+            margin-bottom: 15px;
+            font-size: 36px;
+        }
+        p { 
+            color: #666; 
+            margin-bottom: 25px; 
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        .btn { 
+            display: inline-block; 
+            background: #8B4513; 
+            color: white; 
+            padding: 12px 30px; 
+            text-decoration: none; 
+            border-radius: 5px; 
+            font-weight: 600;
+            margin: 5px;
+            transition: background 0.3s ease;
+        }
+        .btn:hover { 
+            background: #A0522D; 
+        }
+        .error-details {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            text-align: left;
+            font-family: monospace;
+            font-size: 14px;
+            max-height: 200px;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-icon">🔥</div>
+        <h1>500 - Server Error</h1>
+        <p>Something went wrong on our server. Our team has been notified and we're working to fix it.</p>
+        <div style="margin-top: 30px;">
+            <a href="/" class="btn">Go to Homepage</a>
+            <a href="javascript:location.reload()" class="btn">Try Again</a>
+        </div>
+        
+        <% if (typeof error !== 'undefined') { %>
+            <div class="error-details">
+                <strong>Error Details:</strong><br>
+                <%= error.message || 'Unknown error' %>
+            </div>
+        <% } %>
+    </div>
+</body>
+</html>
